@@ -5,10 +5,10 @@ from datetime import date, timedelta
 def makeURL(query_date, duration):
     now = date.today()
     after = now - query_date
-    after = after.days + 1
+    after = after.days
     before = after - duration
     base_url = "https://api.pushshift.io/reddit/search/submission/?subreddit=WallstreetBets"
-    base_url += "&after=" + str(after) + "d&before=" + str(before) + "d&sort=asc&size=10"
+    base_url += "&after=" + str(after) + "d&before=" + str(before) + "d&sort=asc&size=500"
     return base_url
 
 def getDates():
@@ -17,9 +17,10 @@ def getDates():
     query_end = date(2021, 2, 4)
     query_len = (query_end - query_start).days
     step_size = 1
+    buffer_size = 5
     output_str = ""
-    for i in range(int(query_len / step_size) + 1):
-        query_date = query_start + timedelta(days=i)
+    for i in range(int(query_len / step_size) + 2 * buffer_size + 1): #3
+        query_date = query_start + timedelta(days=i-buffer_size)
         var_url = makeURL(query_date, step_size)
         response = {}
         while(True):
