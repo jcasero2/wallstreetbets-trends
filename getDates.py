@@ -13,6 +13,8 @@ def makeURL(query_date, duration):
 
 def getDates():
     headers = {'User-agent': 'its me 0.0.1'}
+    #params = {'subreddit': 'WallstreetBets', 'after': '1612930992', 'size': 1}
+    #response = requests.get("https://api.pushshift.io/reddit/search/submission/", headers=headers, params=params)
     query_start = date(2021, 1, 12)
     query_end = date(2021, 2, 4)
     query_len = (query_end - query_start).days

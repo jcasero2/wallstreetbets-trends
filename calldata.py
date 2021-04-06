@@ -95,9 +95,12 @@ def calldata():
     query_start = datetime(2021, 1, 12)
     query_end = datetime(2021, 2, 4)
     dates = dateRange(query_start, query_end)
+    start_id = get_start_id(query_start, dates)
     end_id = get_end_id(query_end, dates)
+    params['after'] = end_id
+    params['count'] = 0
     call_count = 0
-    while(end_id not in data.values):
+    while(start_id not in data.values):
         while(True):
             res = requests.get(base_url,
                         headers=headers,
@@ -113,6 +116,7 @@ def calldata():
         new_df = df_from_response(res)
         # take the final row (oldest entry)
         if (new_df.shape[0] > 0):
+            params['count'] = params['count'] + new_df.shape[0]
             row = new_df.iloc[len(new_df)-1]
             # create fullname
             fullname = row['kind'] + '_' + row['id']
@@ -123,6 +127,7 @@ def calldata():
             data = data.append(new_df, ignore_index=True)
         else:
             print(call_count)
+            break
 
     data.to_pickle("./redditAPI_data.pkl")
     print(data)
