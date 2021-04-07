@@ -1,40 +1,44 @@
 import time
 import requests
-from datetime import date, timedelta
-
-def makeURL(query_date, duration):
-    now = date.today()
-    after = now - query_date
-    after = after.days
-    before = after - duration
-    base_url = "https://api.pushshift.io/reddit/search/submission/?subreddit=WallstreetBets"
-    base_url += "&after=" + str(after) + "d&before=" + str(before) + "d&sort=asc&size=500"
-    return base_url
+from datetime import datetime, date, timedelta
 
 def getDates():
-    headers = {'User-agent': 'its me 0.0.1'}
-    #params = {'subreddit': 'WallstreetBets', 'after': '1612930992', 'size': 1}
-    #response = requests.get("https://api.pushshift.io/reddit/search/submission/", headers=headers, params=params)
-    query_start = date(2021, 1, 12)
-    query_end = date(2021, 2, 4)
-    query_len = (query_end - query_start).days
-    step_size = 1
-    buffer_size = 5
+    headers = {'User-agent': 'bot4school/0.0.1'}
+    params = {'subreddit': 'WallstreetBets', 'after': '1611944804', 'size': 500, 'sort': 'asc'}
+    query_start = date(2021, 1, 11)
+    query_start_unix = time.mktime(query_start.timetuple())
+    #params['after'] = str(int(query_start_unix))
+    query_end = date(2021, 2, 5)
+    query_end_unix = time.mktime(query_end.timetuple())
     output_str = ""
-    for i in range(int(query_len / step_size) + 2 * buffer_size + 1): #3
-        query_date = query_start + timedelta(days=i-buffer_size)
-        var_url = makeURL(query_date, step_size)
-        response = {}
+    call_count = 0
+    file_count = 6
+    output_filename = "dates.output" + str(file_count)
+    while (int(params['after']) < int(query_end_unix)):
         while(True):
-            response = requests.get(var_url, headers=headers)
+            response = requests.get("https://api.pushshift.io/reddit/search/submission/", headers=headers, params=params)
             if response.status_code == 200:
-                time.sleep(2)
+                #Pushshift API call limit: 200 calls per min
+                time.sleep(60/200)
+                call_count += 1
+                if (call_count % 50 == 0):
+                    print("call #:", call_count)
+                    print("datapoints:", call_count * 100)
+                    if (call_count % 1000 == 0):
+                        file_count += 1
+                        output_filename = "dates.output" + str(file_count)
+                        time.sleep(60)
+                    with open(output_filename, "w") as output:
+                        output.write(output_str)
                 break
             else:
+                print("bad request")
                 time.sleep(10)
-        for post in response.json()["data"]:
+        data = response.json()["data"]
+        for post in data:
             output_str += str(post["created_utc"]) + "\t" + str(post["id"]) + "\n"
-    with open("dates.output", "w") as output:
+        params['after'] = str(int(data[len(data) - 1]['created_utc']))
+    with open(output_filename, "w") as output:
         output.write(output_str)
     return
 

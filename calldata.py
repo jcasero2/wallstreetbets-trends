@@ -86,6 +86,11 @@ def calldata():
     token = f"bearer {res.json()['access_token']}"
     # update API headers with authorization (bearer token)
     headers = {**headers, **{'Authorization': token}}
+    response = requests.get("https://www.reddit.com/r/wallstreetbets/comments/lglrg5/.json",headers={'User-agent': 'its_me/0.0.1'})
+    print(response)
+    print(response.json()[0]['data']['children'])
+    #'created_utc', 'num_comments', 'id', 'banned_at_utc', 'removed_by', 'removal_reason', 'selftext', 'title', 'upvote_ratio', 'ups', 'likes', 
+    return
 
     # initialize dataframe and parameters for pulling data in loop
     data = pd.DataFrame()
