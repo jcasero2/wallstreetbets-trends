@@ -27,6 +27,7 @@ def getDates():
                     if (call_count % 1000 == 0):
                         file_count += 1
                         output_filename = "dates.output" + str(file_count)
+                        output_str = ""
                         time.sleep(60)
                     with open(output_filename, "w") as output:
                         output.write(output_str)
