@@ -128,9 +128,9 @@ def callposts():
             if (is_validResponse(response)):
                 counted += 1
                 call_count += 1
-                if (call_count % 10 == 0):
+                if (call_count % 50 == 0):
                     print("Successful Call #:", call_count)
-                    if (call_count % 10 == 0):
+                    if (call_count % 50 == 0):
                         data.to_pickle("./redditAPI_data.pkl")
                 new_df = df_from_response(response)
                 data = data.append(new_df, ignore_index=True)
