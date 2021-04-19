@@ -1,14 +1,19 @@
 import time
 import requests
 import datetime
+import os
 
 def getDates(month, day, year):
     headers = {'User-agent': 'bot4school/0.0.1'}
-    params = {'subreddit': 'WallstreetBets', 'after': '', 'size': 500, 'sort': 'asc'}
+    params = {'subreddit': 'WallstreetBets', 'after': '', 'size': 500, 'sort': 'asc', 'author_removed': False,
+    'mod_removed': False, 'author': '![deleted]'}
 
     query_start_unix = datetime.datetime(int(year), int(month), int(day), 0, 0).strftime('%s')
     query_end_unix= datetime.datetime(int(year), int(month), int(day), 23, 59).strftime('%s')
 
+    path = "dates/"
+    if not os.path.exists(path):
+        os.makedirs(path)
     output_str = ""
     output_filename = "dates.output-" + str(month) + "-" + str(day) + "-" + str(year)
 
@@ -31,11 +36,10 @@ def getDates(month, day, year):
                 break
             output_str += str(post["created_utc"]) + "\t" + str(post["id"]) + "\n"
         params['after'] = str(int(data[len(data) - 1]['created_utc']))
-        
-    with open(output_filename, "w") as output:
+
+    with open(os.path.join(path, output_filename), "w") as output:
         output.write(output_str)
     return
 
-
 if __name__ == "__main__":
-    getDates(4,1,2021)
+    getDates(4,2,2021)
