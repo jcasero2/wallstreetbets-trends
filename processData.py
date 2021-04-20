@@ -7,6 +7,7 @@ import pickle
 import re
 import string 
 from preprocess import pprocess
+import os
 
 
 """
@@ -33,8 +34,11 @@ all tickers -> sentiment score is returned for the given day.
 """
 def processData(month, day, year, positive_words, negative_words, stock_map):
     # file to process
-    filename = f'./posts-{month}-{day}-{year}.pkl'
-    df = pd.read_pickle(filename)
+    path = "posts/"
+    filename = "Posts-" + month + "-" + day + "-" + year + ".pickle"
+    dataFrame_name = os.path.join(path, filename)
+
+    df = pd.read_pickle(dataFrame_name)
     title_list = df.title.astype(str)
     ups_list = df.ups.astype(str)
     downs_list = df.downs.astype(str)
@@ -55,24 +59,7 @@ def processData(month, day, year, positive_words, negative_words, stock_map):
                 score *= float(calculate_sentiment(title, text_list[i], positive_words, negative_words))
                 stock_scores[clean] += score
 
-    # for x in range(size):
-    #     t = df["title"].iloc[x]
-    #     t_list = pprocess(t)
-    #     for word in t_list:
-    #         clean = re.sub('[$]', '', word)
-    #         if clean in stock_map:
-    #             if clean not in stock_count:
-    #                 stock_count[clean] = 0
-    #             stock_count[clean] += 1
-    sorted_stock_scores = sorted(stock_scores.items(), key = lambda x: abs(x[1]), reverse=True)
-    print(sorted_stock_scores)
-    return sorted_stock_scores
-    # total_stock_references = 0
-    # for pair in sorted_stock_scores:
-    #     print(stock_map[pair[0]] + ": " + str(pair[1]))
-    #     total_stock_references += pair[1]
-    # print("Total Number of stocks mentioned: " + str(total_stock_references))
-
+    return stock_scores
 
 def calculate_sentiment(title, text, positive_words, negative_words):
     score = 0
@@ -84,11 +71,7 @@ def calculate_sentiment(title, text, positive_words, negative_words):
         word = word.lower()
         if word in positive_words: score += 1
         elif word in negative_words: score -= 1
-    # return sentiment score
-    # print(f' The score is : {score}')
     return score > 0 and 2 or -2
-
-
 
 if __name__ == "__main__":
     positive_words = set()

@@ -58,7 +58,6 @@ def callposts(month, day, year, max_posts):
     #'created_utc', 'num_comments', 'id', 'banned_at_utc', 'removed_by', 'removal_reason', 'selftext', 'title', 'upvote_ratio', 'ups', 'likes', 
     return
     """
-
     query_start = datetime.datetime(int(year), int(month), int(day), 0, 0).strftime('%s')
     query_end= datetime.datetime(int(year), int(month), int(day), 23, 59).strftime('%s')
     id_list = []
