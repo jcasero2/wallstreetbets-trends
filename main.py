@@ -45,9 +45,10 @@ for tuple in date_list:
     filename = "Posts-" + str(tuple[1]) + "-" + str(tuple[2]) + "-" + str(tuple[0]) + ".pickle"
     dataFrame_name = os.path.join(path, filename)
     if not os.path.exists(dataFrame_name):
-        print("does not exist")
+        print("Does not exist --> generating list of postID's")
         getDates(str(tuple[1]), str(tuple[2]), str(tuple[0]))
-        callposts(str(tuple[1]), str(tuple[2]), str(tuple[0]),0)
+        print("Finished postID list --> generating dataFrame")
+        callposts(str(tuple[1]), str(tuple[2]), str(tuple[0]),10)
     s_scores.append(processData(str(tuple[1]), str(tuple[2]), str(tuple[0]),
                                  positive_words, negative_words, stock_map))
 
