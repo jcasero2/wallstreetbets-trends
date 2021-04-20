@@ -5,10 +5,43 @@ import os
 import datetime
 import string
 import pickle
+import yfinance as yf
+from scipy import stats
+from tabulate import tabulate
+from pandas_datareader import data as pdr
+import pandas as pd
+
+def calculate_next_week_day(day):    
+    if day.isoweekday()== 5:
+        day += datetime.timedelta(days=3)
+    elif day.isoweekday()== 6:
+        day += datetime.timedelta(days=2)
+    else:
+        day += datetime.timedelta(days=1)
+    return day
+
+def price_for_date(year ,month ,day ,stock_ticker):
+
+    start_date = ""
+    end_date = ""
+    start_date = str(year) + "-" + str(month) + "-" + str(day)
+    end_date = str(year) + "-" + str(month) + "-" + str(int(day) + 1)
+
+    data = pdr.get_data_yahoo(stock_ticker, start= start_date , end= end_date)
+
+    return data['Adj Close'].iloc[0]
+
+def calculate_kendall(ranking1 , ranking2 ):
+
+    tau, p_value = stats.kendalltau( ranking1, ranking2)
+
+    return tau
 
 def convert_date_to_tuple(string):
     temp = string.split("-")
     return (int(temp[0]), int(temp[1]), int(temp[2]))
+
+
 x = input("Input start date (YYYY-MM-DD): ")
 y = input("Input end date (YYYY-MM-DD): ")
 n = input("Input size of ranked list: ")
@@ -63,4 +96,48 @@ for index in s_scores:
 sorted_stock_scores = sorted(sentiment_index.items(), key = lambda x: abs(x[1]), reverse=True)
 
 list_size = min(int(n), len(sorted_stock_scores))
-print(sorted_stock_scores[:list_size])
+final_list = sorted_stock_scores[:list_size]
+
+f_list = []
+for i in range(list_size):
+    temp_arr = []
+    pair = sorted_stock_scores[i]
+    temp_arr.append(stock_map[pair[0]])
+    if float(pair[1]) > 0:
+        temp_arr.append("Long")
+    else:
+        temp_arr.append("Short")
+    f_list.append(temp_arr)
+print(tabulate(f_list, headers=['Stock', 'Long/Short Position']))
+#####Evaluation###### Only uncomment when running on a historical date range and on ranges that dont include holidays
+print("\n")
+correct = 0
+count = 0
+change_list = []
+f_list = []
+for pair in final_list:
+    temp_arr = []
+    count +=1
+    temp_arr.append(stock_map[pair[0]])
+    if float(pair[1]) > 0:
+        temp_arr.append("Long")
+    else:
+        temp_arr.append("Short")
+
+    next_day = calculate_next_week_day(epoch_end)
+    (n_year, n_month, n_day) = convert_date_to_tuple(next_day.strftime('%Y-%m-%d'))
+    #print(str(n_year) + " " + str(n_month) + str(n_day))
+    new_p = price_for_date(n_year, n_month, n_day, pair[0])
+    old_p = price_for_date(e_year, e_month, e_day, pair[0])
+    change =  round(((new_p - old_p)/ old_p) * 100, 2)
+    change_list.append(change)
+    temp_arr.append(str(change))
+    f_list.append(temp_arr)
+    if (float(pair[1]) * float(change)) > 0: #both the change and the predicted change are of the same sign
+        correct += 1
+print(tabulate(f_list, headers=['Stock', 'Long/Short Position', 'Price Change %']))
+accuracy = float(correct)/count * 100
+print("Trend Prediction Accuracy = " + str(accuracy) + "%")
+
+our_ranking = list(range(1,(int(n)+1)))
+print("Kendall-Tau Distance to optimal ranking: " + str(calculate_kendall(our_ranking, change_list)))

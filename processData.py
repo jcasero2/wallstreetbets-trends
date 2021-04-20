@@ -8,6 +8,7 @@ import re
 import string 
 from preprocess import pprocess
 import os
+import math
 
 
 """
@@ -54,7 +55,7 @@ def processData(month, day, year, positive_words, negative_words, stock_map):
             if clean in stock_map:
                 if clean not in stock_scores:
                     stock_scores[clean] = 0
-                score = float(ups_list[i]) + float(downs_list[i])
+                score = math.log10(float(ups_list[i]) + float(downs_list[i]) + 2)
                 score *= float(ratio_list[i])
                 score *= float(calculate_sentiment(title, text_list[i], positive_words, negative_words))
                 stock_scores[clean] += score

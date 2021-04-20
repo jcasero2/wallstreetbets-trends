@@ -18,6 +18,7 @@ def getDates(month, day, year):
     output_filename = "dates.output-" + str(month) + "-" + str(day) + "-" + str(year)
 
     params['after'] = str(int(query_start_unix))
+    count = 0
     while (int(params['after']) < int(query_end_unix)):
         while(True):
             response = requests.get("https://api.pushshift.io/reddit/search/submission/", headers=headers, params=params)
@@ -35,11 +36,13 @@ def getDates(month, day, year):
             if int(post["created_utc"]) > int(query_end_unix):
                 break
             output_str += str(post["created_utc"]) + "\t" + str(post["id"]) + "\n"
+            count += 1
         params['after'] = str(int(data[len(data) - 1]['created_utc']))
+        if count > 1000: break
 
     with open(os.path.join(path, output_filename), "w") as output:
         output.write(output_str)
     return
 
 if __name__ == "__main__":
-    getDates(4,2,2021)
+    getDates(4,5,2021)
