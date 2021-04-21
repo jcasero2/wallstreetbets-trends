@@ -17,6 +17,7 @@ Investor opinion and market sentiment have long been used to augment technical a
 
 ## API Refrence
 Reddit API: https://www.reddit.com/dev/api/
+
 Pushshift Reddit Search API: https://github.com/pushshift/api
 
 
