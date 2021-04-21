@@ -21,15 +21,22 @@ def calculate_next_week_day(day):
     return day
 
 def price_for_date(year ,month ,day ,stock_ticker):
-
-    start_date = ""
-    end_date = ""
     start_date = str(year) + "-" + str(month) + "-" + str(day)
-    end_date = str(year) + "-" + str(month) + "-" + str(int(day) + 1)
+    d_day = datetime.date(year, month, day)
+    day_number = d_day.weekday()
 
-    data = pdr.get_data_yahoo(stock_ticker, start= start_date , end= end_date)
+    while(day_number >= 5):
+        d_day += datetime.timedelta(days=1)
+        day_number = d_day.weekday()
+    (year, month, day) = convert_date_to_tuple(d_day.strftime('%Y-%m-%d'))
+    try:
+        data = pdr.get_data_yahoo(stock_ticker, start= start_date , end= start_date)
+        return data['Adj Close'].iloc[0]
+    except:
+        print("choose a differnt date range, last day/da after last day is a holiday no market data")
 
-    return data['Adj Close'].iloc[0]
+    
+
 
 def calculate_kendall(ranking1 , ranking2 ):
 
@@ -56,7 +63,9 @@ delta =  epoch_end - epoch_start
 date_list = []
 for i in range(delta.days + 1):
     day = epoch_start + datetime.timedelta(days = i)
-    date_list.append(convert_date_to_tuple(day.strftime('%Y-%m-%d')))
+    week_number = day.weekday()
+    if(week_number < 5):
+        date_list.append(convert_date_to_tuple(day.strftime('%Y-%m-%d')))
 
 #check if corresponding dataframes exist
 positive_words = set()
