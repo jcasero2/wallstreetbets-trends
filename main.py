@@ -140,4 +140,6 @@ accuracy = float(correct)/count * 100
 print("Trend Prediction Accuracy = " + str(accuracy) + "%")
 
 our_ranking = list(range(1,(int(n)+1)))
+our_ranking.reverse() # we reverse the list as the value of the first stock we think will be the highest
+change_list = [abs(number) for number in change_list]
 print("Kendall-Tau Distance to optimal ranking: " + str(calculate_kendall(our_ranking, change_list)))
