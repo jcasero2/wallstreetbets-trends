@@ -28,7 +28,6 @@ def getDates(month, day, year):
                 break
             else:
                 print("bad request")
-                #time.sleep(10) WHY 10 Seconds
                 time.sleep(1)
 
         data = response.json()["data"]
