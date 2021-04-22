@@ -28,6 +28,8 @@ A user will enter their desiered date range and a number N (stocks to display), 
 
 If the date range entered is in the past, the program will run an analysis on historical stock data using yahoo finance to determine the trend prediction accuracy for the stocks returned and the Kendall-Tau Distance to optimal ranking for the ordering of the list when compared to the historical data.
 
+The best data, meaning most successfully pulled posts come from the date range 4/5 - 4/8. As explained further in the data section below, if you run the program on a date range we have not supplied the data for, the program will take approximately 25 minutes to run per day in the date range as the Reddit APi only allows one call per second and a maximum of forty-five calls per minute.
+
 The following list explains how each component of the program works.
 
 ### generateStockList.py
