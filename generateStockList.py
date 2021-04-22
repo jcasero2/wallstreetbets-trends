@@ -8,7 +8,5 @@ df['Name'] = df.Name.astype(str)
 ticker_to_name = {}
 for index, row in df.iterrows():
     ticker_to_name[row['Symbol']] = row['Name']
-# print(df['Name'].iloc[0])
-# print(ticker_to_name['GME'])
 file_to_write = open("tickers.pickle", "wb")
 pickle.dump(ticker_to_name, file_to_write)
