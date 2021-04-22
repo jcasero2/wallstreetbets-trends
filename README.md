@@ -39,11 +39,11 @@ Calls the Pushshift Reddit Search API for a specified date to pull all posts fro
 ### callposts.py
 Finds the list of post ID's created by getDates for a specified day and calls the Reddit API for each post to create a Dataframe of:
 
-Post Title
-Post Text
-Upvote Ratio
-Total Upvotes
-Total Downvotes
+Post Title,
+Post Text,
+Upvote Ratio,
+Total Upvotes,
+Total Downvotes,
 Post ID
 
 for all posts on r/WallStreetBets for the specified day. It ouputs the serialized DataFrame as a new file in the posts/ directory.
@@ -63,11 +63,11 @@ The dates/ forlder holds files with all the posts on r/WallStreetBets for a give
 
 The posts/ forlder holds serialized pickle files with all the posts on r/WallStreetBets for a given day, denoted in the file name. The file is a DataFrame which includes all of the posts that are classified to a NYSE stock ticker and includes for each post:
 
-Post Title
-Post Text
-Upvote Ratio
-Total Upvotes
-Total Downvotes
-Post ID
+Post Title,
+Post Text,
+Upvote Ratio,
+Total Upvotes,
+Total Downvotes,
+Post ID,
 
 We have included the date ranges 2/7 - 2/11 and 3/26 - 4/15 for our project submission.
