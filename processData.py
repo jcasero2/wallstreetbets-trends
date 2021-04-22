@@ -12,23 +12,6 @@ import math
 
 
 """
-data available:
-
-banned_at_utc
-created_utc
-downs
-id
-num_commnets
-removal_reason
-removed_by
-selftext
-title
-ups
-upvote_ratio
-
-positive_words and negative_words are sets used for sentiment analysis
-stock_map dict of all company's ticker -> company's name
-
 processData:
 the file at respective month/day/year is processed and an index of 
 all tickers -> sentiment score is returned for the given day.
@@ -73,20 +56,4 @@ def calculate_sentiment(title, text, positive_words, negative_words):
         if word in positive_words: score += 1
         elif word in negative_words: score -= 1
     return score > 0 and 2 or -2
-
-if __name__ == "__main__":
-    positive_words = set()
-    negative_words = set()
-    with open("positive_words.txt") as pos_words:
-        for word in pos_words.readlines():
-            positive_words.add(word.rstrip())
-    
-    with open("negative_words.txt") as neg_words:
-        for word in neg_words.readlines():
-            negative_words.add(word.rstrip())
-    
-    with open("tickers.pickle", "rb") as tickers:
-        stock_map = pickle.load(tickers)
-    
-    processData(1,1,1,positive_words,negative_words,stock_map)
     
