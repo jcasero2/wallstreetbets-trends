@@ -55,3 +55,19 @@ score at stock ticker X = sum for all posts mentioning X ( sentiment score of po
 
 This index is combined with others created over the user's date range to run the prediction analysis in main.py.
 
+
+## Data
+To be able to compress our program and data in a reasonably sized file, we have included a subset of our data that is both the most recent and the most representative of our overall analysis in determining if r/WallStreetBets is a legitimate soucre to base investments upon. 
+
+The dates/ forlder holds files with all the posts on r/WallStreetBets for a given day, denoted in the file name. This includes the unix timestamp and post ID of each post.
+
+The posts/ forlder holds serialized pickle files with all the posts on r/WallStreetBets for a given day, denoted in the file name. The file is a DataFrame which includes all of the posts that are classified to a NYSE stock ticker and includes for each post:
+
+Post Title
+Post Text
+Upvote Ratio
+Total Upvotes
+Total Downvotes
+Post ID
+
+We have included the date ranges 2/7 - 2/11 and 3/26 - 4/15 for our project submission.
