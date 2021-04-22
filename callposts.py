@@ -35,11 +35,6 @@ def df_from_response(res):
             'upvote_ratio': post['data']['upvote_ratio'],
             'ups': post['data']['ups'],
             'downs': post['data']['downs'],
-            # 'num_commnets': post['data']['num_comments'],
-            # 'banned_at_utc': post['data']['banned_at_utc'],
-            # 'removed_by': post['data']['removed_by'],
-            # 'removal_reason': post['data']['removal_reason'],
-            # 'created_utc': datetime.fromtimestamp(post['data']['created_utc']).strftime('%Y-%m-%dT%H:%M:%SZ'),
             'id': post['data']['id']
         }, ignore_index=True)
 
@@ -47,8 +42,6 @@ def df_from_response(res):
 
 # python callposts.py NUMBER_POSTS
 # NUMBER_POSTS should be less than 100k (varies per subreddit and timerange)
-# Guessing NUMBER_POSTS~1500-5000 would take 1 day
-# For final dataset I would recommend 5000 and giving 1-3 days to run
 def callposts(month, day, year, max_posts):
     """
     # Proof of concept
@@ -80,11 +73,8 @@ def callposts(month, day, year, max_posts):
 
         while(True):
                 response = requests.get(var_url, headers=headers)
-                #response = requests.get("https://www.reddit.com/r/wallstreetbets/comments/mhn63v/.json",headers={'User-agent': 'its_me/0.0.1'})
-                # print(response)
                 if response.status_code == 200:
                     #Reddit API call limit: 60 calls per min
-                    # print("success")
                     time.sleep(1)
                     break
                 else:
